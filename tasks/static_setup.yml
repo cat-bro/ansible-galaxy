@@ -69,12 +69,12 @@
 
     - name: Ensure dynamic job rules paths exists
       file:
-        path: "{{ galaxy_dynamic_job_rules_dir }}/{{ item | dirname }}"
+        path: "{{ galaxy_dynamic_job_rules_dir }}/{{ item }}"
         state: directory
         mode: 0755
       loop_control:
-        label: "{{ galaxy_dynamic_job_rules_dir }}/{{ item | dirname }}"
-      with_items: "{{ galaxy_dynamic_job_rules }}"
+        label: "{{ galaxy_dynamic_job_rules_dir }}/{{ item }}"
+      with_items: "{{ galaxy_dynamic_job_rules | map('dirname') | unique }}"
 
     - name: Install dynamic job rules (static)
       copy:
