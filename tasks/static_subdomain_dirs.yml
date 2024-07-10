@@ -61,21 +61,27 @@
     group: "{{ __galaxy_privsep_user_group }}"
     path: "{{ galaxy_themes_static_path }}/static-{{ subdomain.name }}/welcome.html"
 
-- name: Check if iframe for subdomain exists
-  ansible.builtin.uri:
-    url: "{{ galaxy_themes_welcome_url_prefix }}{{ subdomain.name }}.html"
-    return_content: true
-  register: galaxy_themes_use_iframe
-  failed_when: false
-  when: not custom_welcome.stat.exists
+- name: Create welcome.html file for subdomain
+  block:
+    - name: Set welcome URL fact
+      set_fact:
+        galaxy_subdomain_welcome_url: "{{ subdomain.welcome_url|d(galaxy_themes_welcome_url_prefix + subdomain.name) }}"
 
-- name: Template welcome.html for subdomains
-  ansible.builtin.template:
-    src: welcome.html.j2
-    dest: "{{ galaxy_themes_static_path }}/static-{{ subdomain.name }}/welcome.html/index.html"
-    owner: "{{ __galaxy_privsep_user_name }}"
-    group: "{{ __galaxy_privsep_user_group }}"
-    mode: '0644'
+    - name: Check if iframe for subdomain exists
+      ansible.builtin.uri:
+        url: "{{ galaxy_subdomain_welcome_url }}"
+        return_content: true
+      register: galaxy_themes_use_iframe
+      failed_when: false
+
+    - name: Template welcome.html for subdomains
+      ansible.builtin.template:
+        src: welcome.html.j2
+        dest: "{{ galaxy_themes_static_path }}/static-{{ subdomain.name }}/welcome.html/index.html"
+        owner: "{{ __galaxy_privsep_user_name }}"
+        group: "{{ __galaxy_privsep_user_group }}"
+        mode: '0644'
+
   when: not custom_welcome.stat.exists
 
 - name: Include copy_static_files.yml

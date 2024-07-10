@@ -505,6 +505,7 @@ galaxy_themes_subdomains: {}
 #     - "multiple_alignments"
 #   extra_tool_labels:
 #     - "proteomics"
+#   welcome_url: assembly.use.galaxy.co
 galaxy_themes_conf_file_name: "{{ galaxy_themes_conf_path | basename }}"
 galaxy_themes_static_keys:
   static_dir: ""

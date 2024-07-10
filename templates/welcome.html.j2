@@ -29,7 +29,7 @@
 	<script type="text/javascript">
 		var pseudo_rand = parseInt(Date.now() / 1000 / 60 / 10);
 		{% if galaxy_themes_use_iframe is defined %}
-		document.getElementById('center-iframe').src = '{{ galaxy_themes_welcome_url_prefix }}{{ subdomain.name }}?nonce=' + pseudo_rand + '#';
+		document.getElementById('center-iframe').src = '{{ galaxy_subdomain_welcome_url }}?nonce=' + pseudo_rand + '#';
 		{% else %}
 		document.getElementById('center-iframe').src = '{{ galaxy_themes_default_welcome }}?nonce=' + pseudo_rand + '#';
 		{% endif %}
